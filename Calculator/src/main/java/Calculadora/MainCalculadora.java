@@ -60,7 +60,39 @@ public class MainCalculadora extends javax.swing.JFrame {
     }
     
     public float ResolvePilhas(){
+        
         int i;
+        
+        int counter = 0;
+        
+        // Caso raiz na frente de  "-"
+        for(i = 0; i<pilhaOperandos.size(); i++){
+            if(i+1 != pilhaOperandos.size() && (pilhaOperandos.get(i) == '√' && pilhaOperandos.get(i+1) == '-')){
+                jTextField1.setText("Erro!!! Operação inválida.");
+                return(0);
+            }
+        }
+        
+        for(i = 0; i< pilhaOperandos.size(); i++){
+            if(pilhaOperandos.get(i) == 'x' || pilhaOperandos.get(i) == '/' || pilhaOperandos.get(i) == '+' || pilhaOperandos.get(i) == '-'){
+               counter++;
+            }
+        }
+        
+        //Transformar os menos da pilha em numero negativo
+        if(counter >= pilhaValores.size()){
+            for(i = 0; i < pilhaOperandos.size(); i++){
+                if(pilhaOperandos.get(i) == '-'){
+                    float number = pilhaValores.get(i);
+                    number = number * -1;
+                    pilhaValores.set(i, number);
+                    pilhaOperandos.remove(i);
+                }
+            }
+        }
+
+        
+
         int size = pilhaOperandos.size();
         int menor = pilhaOperandos.size();
         float result;
@@ -81,6 +113,8 @@ public class MainCalculadora extends javax.swing.JFrame {
         boolean valido;
         
         int countPrecedencia = 0;
+       
+    
         // Contar operadores de precedencia
         for(i = 0; i < size; i++){
             switch (pilhaOperandos.get(i)){
@@ -119,10 +153,6 @@ public class MainCalculadora extends javax.swing.JFrame {
             }
            
             if(ArrayPrecedencia.get(2) != -1 || ArrayPrecedencia.get(3) != -1){
-                 valido = AvaliaPilha();
-                    if(valido == false){
-                        return(0);
-                    }
                  if(ArrayPrecedencia.get(2) != -1 && ArrayPrecedencia.get(3) != -1){
                     if(ArrayPrecedencia.get(2) < ArrayPrecedencia.get(3)){
                         int index = ArrayPrecedencia.get(2);
@@ -189,6 +219,7 @@ public class MainCalculadora extends javax.swing.JFrame {
             ArrayPrecedencia.set(1,indexDiv);
             ArrayPrecedencia.set(2,indexExp);
             ArrayPrecedencia.set(3,indexRoot);
+            menor = pilhaOperandos.size();
            
         }
         valido = AvaliaPilha();
@@ -196,6 +227,7 @@ public class MainCalculadora extends javax.swing.JFrame {
             return(0);
         }
             
+        
         size = pilhaOperandos.size();
         //Resto da pilha
         for(i = 0; i < size; i = i + 1){
@@ -255,6 +287,7 @@ public class MainCalculadora extends javax.swing.JFrame {
         jButton17 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jButton18 = new javax.swing.JButton();
+        jButton19 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -408,6 +441,7 @@ public class MainCalculadora extends javax.swing.JFrame {
             }
         });
 
+        jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
@@ -421,6 +455,17 @@ public class MainCalculadora extends javax.swing.JFrame {
         jButton18.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton18ActionPerformed(evt);
+            }
+        });
+
+        jButton19.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
+        jButton19.setText(".");
+        jButton19.setToolTipText("");
+        jButton19.setAlignmentX(0.5F);
+        jButton19.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton19ActionPerformed(evt);
             }
         });
 
@@ -463,7 +508,9 @@ public class MainCalculadora extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(83, 83, 83)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -508,10 +555,12 @@ public class MainCalculadora extends javax.swing.JFrame {
                     .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton19, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -588,11 +637,13 @@ public class MainCalculadora extends javax.swing.JFrame {
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         AdicionaAoVisor("-");
-        if(TempNum != ""){
-        AdicionaValor(Float.parseFloat(TempNum));
+        if(TempNum != ""){   
+            AdicionaValor(Float.parseFloat(TempNum));
+         
         }
         TempNum = "";
         AdicionaSimbolo('-');
+ 
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
@@ -630,6 +681,11 @@ public class MainCalculadora extends javax.swing.JFrame {
         LimpaPilhas();
         TempNum = "";
     }//GEN-LAST:event_jButton18ActionPerformed
+
+    private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
+        TempNum += ".";
+        AdicionaAoVisor(".");
+    }//GEN-LAST:event_jButton19ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -677,6 +733,7 @@ public class MainCalculadora extends javax.swing.JFrame {
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton18;
+    private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
